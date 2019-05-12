@@ -139,7 +139,7 @@ namespace PusselTestare
             int siffra = 5;
             SudokuPussel pussel = SkapaEttPusselOchPlaceraEnSiffra(rad, kolumn, siffra);
             bool korrekt = true;
-            var kandidater = from k in pussel.Kandidater
+            var kandidater = from k in pussel.AllaKandidater
                              join s in pussel.SpelPlan on k.SudokuRutId equals s.Id
                              where s.Rad == rad && s.Kolumn == kolumn
                              select new
@@ -165,7 +165,7 @@ namespace PusselTestare
             int siffra = 7;
             SudokuPussel pussel = SkapaEttPusselOchPlaceraEnSiffra(rad, kolumn, siffra);
             bool korrekt = true;
-            var kandidater = from k in pussel.Kandidater
+            var kandidater = from k in pussel.AllaKandidater
                              join s in pussel.SpelPlan on k.SudokuRutId equals s.Id
                              where s.Rad == rad || s.Kolumn == kolumn || s.Box == box
                              select new
@@ -210,7 +210,7 @@ namespace PusselTestare
             int siffra = 7;
             SudokuPussel pussel = SkapaEttPusselOchPlaceraEnSiffra(rad, kolumn, siffra);
             bool korrekt = true;
-            var kandidater = from k in pussel.Kandidater
+            var kandidater = from k in pussel.AllaKandidater
                              join s in pussel.SpelPlan on k.SudokuRutId equals s.Id
                              where s.Rad != rad && s.Kolumn != kolumn && s.Box != box
                              select new

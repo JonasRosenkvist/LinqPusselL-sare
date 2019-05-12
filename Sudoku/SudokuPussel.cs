@@ -13,7 +13,14 @@ namespace Sudoku
         public List<SudokuRuta> SpelPlan { get; private set; }
         public Storlek PusselStorlek { get; private set; }
         public Storlek BoxStorlek { get; private set; }
-        public List<Kandidat> Kandidater { get; private set; }
+        public List<Kandidat> AllaKandidater { get; private set; }
+        public List<Kandidat> MöjligaKandidater
+        {
+            get
+            {
+                return (from k in AllaKandidater where k.Möjlig == true select k).ToList();
+            }
+        }
         #endregion
         #region Konstruktor
         public SudokuPussel(Storlek boxStorlek)
@@ -23,15 +30,15 @@ namespace Sudoku
             BoxStorlek = boxStorlek;
             PusselStorlek = new Storlek(storlek, storlek);
             SpelPlan = new List<SudokuRuta>();
-            Kandidater = new List<Kandidat>();
-            for(int rad = 0; rad < PusselStorlek.AntalRutorIHöjd; rad++)
+            AllaKandidater = new List<Kandidat>();
+            for (int rad = 0; rad < PusselStorlek.AntalRutorIHöjd; rad++)
             {
-                for(int kolumn = 0; kolumn < PusselStorlek.AntalrutorIBredd; kolumn++)
+                for (int kolumn = 0; kolumn < PusselStorlek.AntalrutorIBredd; kolumn++)
                 {
-                    SpelPlan.Add(new SudokuRuta(id, rad, kolumn, BeräknaBox(rad, kolumn),storlek));
+                    SpelPlan.Add(new SudokuRuta(id, rad, kolumn, BeräknaBox(rad, kolumn), storlek));
                     for (int siffra = 1; siffra <= storlek; siffra++)
                     {
-                        Kandidater.Add(new Kandidat(id, siffra));
+                        AllaKandidater.Add(new Kandidat(id, siffra));
                     }
                     id++;
                 }
@@ -40,11 +47,12 @@ namespace Sudoku
         #endregion
         #region Funktioner
         #region Publika
-        public bool PlaceraSiffra(int rad,int kolumn,int siffra)
+
+        public bool PlaceraSiffra(int rad, int kolumn, int siffra)
         {
             SudokuRuta ruta = (from s in SpelPlan
-                              where s.Rad == rad && s.Kolumn == kolumn
-                              select s).First();
+                               where s.Rad == rad && s.Kolumn == kolumn
+                               select s).First();
             if (ruta.Siffra == 0)
             {
                 ruta.Siffra = siffra;
@@ -55,10 +63,111 @@ namespace Sudoku
             else
                 return false;
         }
-        
+        public bool TabortSiffra(int rad, int kolumn)
+        {
+            SudokuRuta ruta = (from s in SpelPlan
+                               where s.Rad == rad && s.Kolumn == kolumn
+                               select s).First();
+            if (ruta.Siffra != 0)
+            {
+                ruta.Siffra = 0;
+                this.RäknaOmKandidater();
+                return true;
+            }
+            return false;
+        }
+        public override string ToString()
+        {
+            string output = String.Empty;
+            int rutNummer = 1;
+            SudokuRuta[] rutor;
+            output += "      0     1     2      3     4     5      6     7     8\n";
+            output += "  ||=======================================================||\n";
+            for (int radNummer = 0; radNummer < PusselStorlek.AntalRutorIHöjd; radNummer++)
+            {
+                rutor = (from s in SpelPlan
+                         where s.Rad == radNummer
+                         select s).ToArray();
+                output += $"{radNummer} |";
+
+                for (int radIRuta = 1; radIRuta <= 3; radIRuta++)
+                {
+                    foreach (SudokuRuta ruta in rutor)
+                    {
+                        if (ruta.Siffra != 0)
+                        {
+                            if (radIRuta != 2)
+                                output += $"|     ";
+                            else
+                                output += $"|  {ruta.Siffra}  ";
+                        }
+                        else
+                        {
+                            int startSiffra = 1 + ((radIRuta - 1) * 3);
+                            int slutSiffra = 3 + ((radIRuta - 1) * 3);
+                            var kandidater = (from k in AllaKandidater
+                                              where k.SudokuRutId == ruta.Id && k.Siffra >= startSiffra && k.Siffra <= slutSiffra
+                                              orderby k.Siffra
+                                              select k);
+                            output += "| ";
+                            foreach (Kandidat kand in kandidater)
+                            {
+                                if (kand.Möjlig)
+                                    output += $"{kand.Siffra}";
+                                else
+                                    output += " ";
+                            }
+                            output += " ";
+                        }
+                        if (rutNummer % 3 == 0)
+                            output += "|";
+                        rutNummer++;
+                    }
+                    output += "|\n  |";
+
+                }
+
+
+                //output += "|\n";
+
+                if ((radNummer + 1) % 3 == 0)
+                    output += "|=======================================================||\n";
+                else
+                    output += "|-----------------||-----------------||-----------------||\n";
+            }
+            return output;
+        }
+
         #endregion
         #region Privata
-        private int BeräknaBox(int rad,int kolumn)
+        /*private bool HittaSingelIRad(out List<SudokuRuta> rutor)
+        {
+            var kandidater = from kandidat in MöjligaKandidater
+                             join sudokuRuta in SpelPlan on kandidat.SudokuRutId equals sudokuRuta.Id
+                             select new
+                             {
+                                 rad = sudokuRuta.Rad,
+                                 siffra = kandidat.Siffra
+                             };
+            var grupperadKandidater = kandidater.GroupBy(x => new { x.rad, x.siffra });
+            foreach(var kandidat in kandidater)
+
+        }*/
+        private void RäknaOmKandidater()
+        {
+            var rutor = from sudokuruta in SpelPlan
+                       where sudokuruta.Siffra != 0
+                       select sudokuruta;
+            foreach (Kandidat kandidat in AllaKandidater)
+                kandidat.Möjlig = true;
+            foreach(SudokuRuta ruta in rutor)
+            {
+                this.TabortAllaKandidaterIRuta(ruta.Id);
+                this.TabortKandidater(ruta.Rad, ruta.Kolumn, ruta.Siffra);
+            }
+
+        }
+        private int BeräknaBox(int rad, int kolumn)
         {
             int antalBoxarIBredd = PusselStorlek.AntalrutorIBredd / BoxStorlek.AntalrutorIBredd;
             return (rad / BoxStorlek.AntalRutorIHöjd) * antalBoxarIBredd + (kolumn / BoxStorlek.AntalrutorIBredd);
@@ -66,10 +175,10 @@ namespace Sudoku
         }
         private int TabortAllaKandidaterIRuta(int rutId)
         {
-            var kandidater = from k in Kandidater
+            var kandidater = from k in AllaKandidater
                              where k.SudokuRutId == rutId
                              select k;
-            foreach(Kandidat kandidat in kandidater)
+            foreach (Kandidat kandidat in kandidater)
             {
                 kandidat.Möjlig = false;
             }
@@ -78,15 +187,15 @@ namespace Sudoku
         private int TabortKandidater(int rad, int kolumn, int siffra)
         {
             int box = this.BeräknaBox(rad, kolumn);
-            var rutor = from k in Kandidater
-                        join s in SpelPlan on k.SudokuRutId equals s.Id
-                        where (s.Rad == rad || s.Kolumn == kolumn || s.Box == box) && k.Siffra == siffra
-                        select k;
-            foreach (var ruta in rutor)
+            var kandidater = from k in AllaKandidater
+                             join s in SpelPlan on k.SudokuRutId equals s.Id
+                             where (s.Rad == rad || s.Kolumn == kolumn || s.Box == box) && k.Siffra == siffra
+                             select k;
+            foreach (var kandidat in kandidater)
             {
-                ruta.Möjlig = false;
+                kandidat.Möjlig = false;
             }
-            return rutor.Count();
+            return kandidater.Count();
         }
         #endregion
         #endregion

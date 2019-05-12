@@ -13,24 +13,65 @@ namespace LinqPusselLösare
         static void Main(string[] args)
         {
             SudokuPussel sudoku = new SudokuPussel(new Storlek(3, 3));
-            sudoku.PlaceraSiffra(2, 2, 5);
-            var resultat = from k in sudoku.Kandidater
-                           join s in sudoku.SpelPlan on k.SudokuRutId equals s.Id
-                           where k.Siffra == 5 && s.Box != 0 && s.Rad != 2 && s.Kolumn != 2
-                           select new
-                           {
-                               rad = s.Rad,
-                               kolumn = s.Kolumn,
-                               box = s.Box,
-                               möjlig = k.Möjlig
-                           };
-            Console.WriteLine("Rad\tKolumn\tBox\tMöjlig");
-            Console.WriteLine("================================================================================\n");
-            foreach (var r in resultat)
+            int val = 0;
+            do
             {
-                Console.WriteLine($"{r.rad}\t{r.kolumn}\t{r.box}\t{r.möjlig}");
+                
+                Console.WriteLine(sudoku + "\n");
+                Console.WriteLine("1: Placera Siffra");
+                Console.WriteLine("2: Tabort Siffra");
+                Console.WriteLine("3: Avsluta\n");
+                Console.Write("Vad vill du göra ? ");
+                try
+                {
+                    val = Convert.ToInt32(Console.ReadLine());
+                    switch (val)
+                    {
+                        case 1:
+                            PlaceraSiffra(sudoku);
+                            break;
+                        case 2:
+                            TabortSiffra(sudoku);
+                            break;
+                    }
+                    Console.Clear();
+                }
+                catch(FormatException)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Valen måste vara heltal\n\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                catch(ArgumentOutOfRangeException)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Siffran som ska placeras måste vara mellan 1-9\n\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
             }
-            Console.ReadLine();
+            while (val != 3);
+        }
+        static void PlaceraSiffra(SudokuPussel sudoku)
+        {
+            int siffra, rad, kolumn;
+            Console.Write("Vilken siffra vill du placera ? ");
+            siffra = Convert.ToInt32(Console.ReadLine());
+            Console.Write($"I vilken rad vill du placera {siffra}:an ?");
+            rad = Convert.ToInt32(Console.ReadLine());
+            Console.Write($"I vilken kolum vill du placera {siffra}:an ?");
+            kolumn = Convert.ToInt32(Console.ReadLine());
+            sudoku.PlaceraSiffra(rad, kolumn, siffra);
+        }
+        static void TabortSiffra(SudokuPussel sudoku)
+        {
+            int rad, kolumn;
+            Console.Write("I vilken rad finns runtan du vill tabort ? ");
+            rad = Convert.ToInt32(Console.ReadLine());
+            Console.Write($"Vilken kolumn i rad {rad} vill du tabort ? ");
+            kolumn = Convert.ToInt32(Console.ReadLine());
+            sudoku.TabortSiffra(rad, kolumn);
         }
     }
 }

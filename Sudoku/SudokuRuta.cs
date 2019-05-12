@@ -27,7 +27,7 @@ namespace Sudoku
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException($"Siffran måste vara mellan 0 och {maxVärde}");
+                    throw new ArgumentOutOfRangeException("SudokuRuta.Siffra", $"Siffran måste vara mellan 0 - {maxVärde}");
                 }
 
             }
