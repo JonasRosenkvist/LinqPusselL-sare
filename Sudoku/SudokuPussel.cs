@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Sudoku.Struct;
 
 namespace Sudoku
@@ -62,6 +60,13 @@ namespace Sudoku
             }
             else
                 return false;
+        }
+        public void PlaceraSiffra(List<SudokuSökResultat> sökResultats)
+        {
+            foreach (SudokuSökResultat sök in sökResultats)
+            {
+                this.PlaceraSiffra(sök.Rad, sök.Kolumn, sök.Siffra);
+            }
         }
         public bool TabortSiffra(int rad, int kolumn)
         {

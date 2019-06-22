@@ -48,7 +48,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SudokuTester.cs" />
+    <Compile Include="SudokuLösare_Test.cs" />
+    <Compile Include="SudokuRuta_Test.cs" />
+    <Compile Include="Sudoku_Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

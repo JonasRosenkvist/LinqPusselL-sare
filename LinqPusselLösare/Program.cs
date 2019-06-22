@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Sudoku;
 using Sudoku.Struct;
 
@@ -13,6 +9,7 @@ namespace LinqPusselLösare
         static void Main(string[] args)
         {
             SudokuPussel sudoku = new SudokuPussel(new Storlek(3, 3));
+            SudokuLösare.FinnsDetSingelIRad(sudoku);
             int val = 0;
             do
             {

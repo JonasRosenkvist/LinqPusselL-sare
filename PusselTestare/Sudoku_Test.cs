@@ -3,56 +3,15 @@ using Sudoku;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using Sudoku.Struct;
 
-namespace PusselTestare
+namespace Sudoku
 {
     [TestClass]
-    public class SudokuTester
+    public class Sudoku_Test
     {
-        [TestMethod]
-        public void Siffra_Sättvärde_Gilltigsiffra()
-        {
-            // Setup
-            int siffra = 7;
-            int maxVärde = 9;
-            SudokuRuta ruta = new SudokuRuta(1, 1, 1, 1, maxVärde);
-
-            //Utför
-            ruta.Siffra = siffra;
-
-            //Kontroll
-            Assert.AreEqual(siffra, ruta.Siffra, "Siffran inte satt korrekt");
-        }
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Siffra_Sättvärde_MindreÄnNoll()
-        {
-            // Setup
-            int siffra = -3;
-            int maxVärde = 9;
-            SudokuRuta ruta = new SudokuRuta(1, 1, 1, 1, maxVärde);
-
-            //Utför
-            ruta.Siffra = siffra;
-
-            //Kontrollen hanteras av den förväntade Exceptionhanteraren
-
-        }
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void Siffra_Sättvärde_ÖverMaxVärde()
-        {
-            // Setup
-            int siffra = 12;
-            int maxVärde = 9;
-            SudokuRuta ruta = new SudokuRuta(1, 1, 1, 1, maxVärde);
-
-            //Utför
-            ruta.Siffra = siffra;
-
-            //Kontrollen hanteras av den förväntade Exceptionhanteraren
-
-        }
+       
+        
         [TestMethod]
         public void SudokuPussel_BeräknaBox_KontrolleraSvar()
         {
@@ -123,6 +82,10 @@ namespace PusselTestare
                 if (ruta.Rad == rad && ruta.Kolumn == kolumn && ruta.Siffra == siffra)
                 {
                     korrekt = true;
+                }
+                if ((ruta.Rad != rad || ruta.Kolumn != kolumn) && ruta.Siffra != 0)
+                {
+                    korrekt = false;
                     break;
                 }
             }
@@ -228,6 +191,9 @@ namespace PusselTestare
             //Kontroll
             Assert.AreEqual(true, korrekt);
         }
+        
+
+       
         #region Funktioner
         private SudokuPussel SkapaEttPusselOchPlaceraEnSiffra(int rad, int kolumn, int siffra)
         {
@@ -235,6 +201,7 @@ namespace PusselTestare
             pussel.PlaceraSiffra(rad, kolumn, siffra);
             return pussel;
         }
+        
         #endregion
     }
 

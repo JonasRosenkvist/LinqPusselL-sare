@@ -42,9 +42,12 @@
   <ItemGroup>
     <Compile Include="Kandidat.cs" />
     <Compile Include="Struct\Storlek.cs" />
+    <Compile Include="Struct\SudokuSökResultat.cs" />
+    <Compile Include="SudokuLösare.cs" />
     <Compile Include="SudokuPussel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SudokuRuta.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
