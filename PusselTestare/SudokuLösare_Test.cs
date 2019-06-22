@@ -204,5 +204,101 @@ namespace Sudoku
             
         }
         #endregion
+        [TestClass]
+        public class SingelIBox_Test
+        {
+            [TestMethod]
+            public void Det_Finns_Singel_I_Box()
+            {
+                //Setup 
+                SudokuPussel pussel;
+                bool svar;
+
+                //Utför
+                pussel = SkapaEttPusselMedSingel_I_Box();
+                svar = SudokuLösare.FinnsDetSingelIBox(pussel);
+
+                //Kontroll
+                Assert.AreEqual(true, svar);
+            }
+
+            [TestMethod]
+            public void Det_Finns_Singel_I_Box_Kontrollerar_Siffra()
+            {
+                //SetUp
+                SudokuPussel pussel;
+                List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
+                //Utför
+                pussel = SkapaEttPusselMedSingel_I_Box();
+                SudokuLösare.FinnsDetSingelIBox(pussel, out resultat);
+
+                //Kontroll
+                Assert.AreEqual(1, resultat.First().Siffra);
+
+            }
+            [TestMethod]
+            public void Det_Finns_Singel_I_Box_Kontrollerar_Rad()
+            {
+                //SetUp
+                SudokuPussel pussel;
+                List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
+                //Utför
+                pussel = SkapaEttPusselMedSingel_I_Box();
+                SudokuLösare.FinnsDetSingelIBox(pussel, out resultat);
+
+                //Kontroll
+                Assert.AreEqual(4, resultat.First().Rad);
+            }
+            [TestMethod]
+            public void Det_Finns_Singel_I_Box_Kontrollerar_Kolumn()
+            {
+                //SetUp
+                SudokuPussel pussel;
+                List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
+                //Utför
+                pussel = SkapaEttPusselMedSingel_I_Box();
+                SudokuLösare.FinnsDetSingelIBox(pussel, out resultat);
+
+                //Kontroll
+                Assert.AreEqual(2, resultat.First().Kolumn);
+            }
+            public void Det_Finns_Ingen_Singel_I_Rad_Return_Tom_Lista()
+            {
+                //SetUp
+                SudokuPussel pussel = new SudokuPussel(new Storlek(3, 3));
+                List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
+                //Utför
+                SudokuLösare.FinnsDetSingelIBox(pussel, out resultat);
+
+                //Kontroll
+                Assert.AreEqual(0, resultat.Count());
+            }
+            [TestMethod]
+            public void Det_Finns_Ingen_Singel_I_Kolumn()
+            {
+                //Setup 
+                SudokuPussel pussel = new SudokuPussel(new Sudoku.Struct.Storlek(3, 3));
+                bool svar;
+
+                //Utför
+                pussel.PlaceraSiffra(0, 0, 3);
+                pussel.PlaceraSiffra(1, 3, 3);
+                pussel.PlaceraSiffra(2, 7, 4);
+                svar = SudokuLösare.FinnsDetSingelIKolumn(pussel);
+
+                //Kontroll
+                Assert.AreEqual(false, svar);
+            }
+            private SudokuPussel SkapaEttPusselMedSingel_I_Box()
+            {
+                SudokuPussel pussel = new SudokuPussel(new Sudoku.Struct.Storlek(3, 3));
+                pussel.PlaceraSiffra(0, 0, 1);
+                pussel.PlaceraSiffra(7, 1, 1);
+                pussel.PlaceraSiffra(5, 2, 4);
+                pussel.PlaceraSiffra(3, 2, 5);
+                return pussel;
+            }
+
+        }
     }
 }
