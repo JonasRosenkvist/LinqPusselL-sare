@@ -87,5 +87,28 @@ namespace Sudoku
             return sudokurutor.Count() > 0;
         }
 
+        public static bool FinnsDetSingelKandidater(SudokuPussel pussel)
+        {
+            List<SudokuSökResultat> sökresultat = new List<SudokuSökResultat>();
+            return FinnsDetSingelKandidater(pussel, out sökresultat);
+        }
+        public static bool FinnsDetSingelKandidater(SudokuPussel pussel, out List<SudokuSökResultat> resultat)
+        {
+            List<SudokuSökResultat> sökresultat = new List<SudokuSökResultat>();
+            var sudokurutor = (from sudokuruta in pussel.SpelPlan
+                               join kandidat in pussel.MöjligaKandidater on sudokuruta.Id equals kandidat.SudokuRutId
+                               group kandidat by new { sudokuruta.Rad, sudokuruta.Kolumn } into ruta
+                               select ruta).Where(x => x.Count() == 1);
+            foreach (var ruta in sudokurutor)
+            {
+                foreach (var info in ruta)
+                {
+                    sökresultat.Add(new SudokuSökResultat { Rad = ruta.Key.Rad, Kolumn = ruta.Key.Kolumn, Siffra = info.Siffra});
+                }
+            }
+            resultat = sökresultat;
+            return sudokurutor.Count() > 0;
+        }
+
     }
 }
