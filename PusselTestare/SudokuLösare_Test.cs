@@ -35,7 +35,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingel_I_Rad();
-                SudokuLösare.FinnsDetSingelIRad(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIRad(pussel,  resultat);
 
                 //Kontroll
                 Assert.AreEqual(3, resultat.First().Siffra);
@@ -49,7 +49,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingel_I_Rad();
-                SudokuLösare.FinnsDetSingelIRad(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIRad(pussel,  resultat);
 
                 //Kontroll
                 Assert.AreEqual(2, resultat.First().Rad);
@@ -62,7 +62,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingel_I_Rad();
-                SudokuLösare.FinnsDetSingelIRad(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIRad(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(6, resultat.First().Kolumn);
@@ -73,7 +73,7 @@ namespace Sudoku
                 SudokuPussel pussel = new SudokuPussel(new Storlek(3, 3));
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
-                SudokuLösare.FinnsDetSingelIRad(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIRad(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(0, resultat.Count());
@@ -133,7 +133,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingel_I_Kolumn();
-                SudokuLösare.FinnsDetSingelIKolumn(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIKolumn(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(7, resultat.First().Siffra);
@@ -147,7 +147,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingel_I_Kolumn();
-                SudokuLösare.FinnsDetSingelIKolumn(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIKolumn(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(4, resultat.First().Rad);
@@ -160,7 +160,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingel_I_Kolumn();
-                SudokuLösare.FinnsDetSingelIKolumn(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIKolumn(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(5, resultat.First().Kolumn);
@@ -171,7 +171,7 @@ namespace Sudoku
                 SudokuPussel pussel = new SudokuPussel(new Storlek(3, 3));
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
-                SudokuLösare.FinnsDetSingelIKolumn(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIKolumn(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(0, resultat.Count());
@@ -232,7 +232,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingel_I_Box();
-                SudokuLösare.FinnsDetSingelIBox(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIBox(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(1, resultat.First().Siffra);
@@ -246,7 +246,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingel_I_Box();
-                SudokuLösare.FinnsDetSingelIBox(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIBox(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(4, resultat.First().Rad);
@@ -259,24 +259,24 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingel_I_Box();
-                SudokuLösare.FinnsDetSingelIBox(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIBox(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(2, resultat.First().Kolumn);
             }
-            public void Det_Finns_Ingen_Singel_I_Rad_Return_Tom_Lista()
+            public void Det_Finns_Ingen_Singel_I_Box_Return_Tom_Lista()
             {
                 //SetUp
                 SudokuPussel pussel = new SudokuPussel(new Storlek(3, 3));
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
-                SudokuLösare.FinnsDetSingelIBox(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelIBox(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(0, resultat.Count());
             }
             [TestMethod]
-            public void Det_Finns_Ingen_Singel_I_Kolumn()
+            public void Det_Finns_Ingen_Singel_I_Box()
             {
                 //Setup 
                 SudokuPussel pussel = new SudokuPussel(new Sudoku.Struct.Storlek(3, 3));
@@ -286,7 +286,7 @@ namespace Sudoku
                 pussel.PlaceraSiffra(0, 0, 3);
                 pussel.PlaceraSiffra(1, 3, 3);
                 pussel.PlaceraSiffra(2, 7, 4);
-                svar = SudokuLösare.FinnsDetSingelIKolumn(pussel);
+                svar = SudokuLösare.FinnsDetSingelIBox(pussel);
 
                 //Kontroll
                 Assert.AreEqual(false, svar);
@@ -305,7 +305,9 @@ namespace Sudoku
         #endregion
 
 
+        #region SingelKandidat
         [TestClass]
+        
         public class SingelIKandidat_Test
         {
             [TestMethod]
@@ -330,7 +332,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingelKandidat();
-                SudokuLösare.FinnsDetSingelKandidater(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelKandidater(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(4, resultat.First().Siffra);
@@ -344,7 +346,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingelKandidat();
-                SudokuLösare.FinnsDetSingelKandidater(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelKandidater(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(0, resultat.First().Rad);
@@ -357,7 +359,7 @@ namespace Sudoku
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
                 pussel = SkapaEttPusselMedSingelKandidat();
-                SudokuLösare.FinnsDetSingelKandidater(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelKandidater(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(8, resultat.First().Kolumn);
@@ -368,7 +370,7 @@ namespace Sudoku
                 SudokuPussel pussel = new SudokuPussel(new Storlek(3, 3));
                 List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
                 //Utför
-                SudokuLösare.FinnsDetSingelKandidater(pussel, out resultat);
+                SudokuLösare.FinnsDetSingelKandidater(pussel, resultat);
 
                 //Kontroll
                 Assert.AreEqual(0, resultat.Count());
@@ -404,5 +406,6 @@ namespace Sudoku
             }
 
         }
+        #endregion
     }
 }

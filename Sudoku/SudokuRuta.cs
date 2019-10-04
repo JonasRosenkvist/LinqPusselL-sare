@@ -36,7 +36,7 @@ namespace Sudoku
         public int Kolumn { get; private set; }
         public int Id { get; private set; }
         public int Box { get; private set; }
-        public bool StartSiffra { get; private set; }
+        public bool StartSiffra { get; set; }
         #endregion
         #region Konstruktor
         public SudokuRuta(int id,int rad,int kolumn,int box,int maxVärde)

@@ -13,7 +13,7 @@ namespace Sudoku
        
         
         [TestMethod]
-        public void SudokuPussel_BeräknaBox_KontrolleraSvar()
+        public void BeräknaBox_KontrolleraSvar()
         {
             // Setup
             int rad = 5;
@@ -32,7 +32,7 @@ namespace Sudoku
             Assert.AreEqual(förväntadBox, box, "Något går fel i beräkningen av boxar");
         }
         [TestMethod]
-        public void Placera_Siffra_Tom_Box()
+        public void PlaceraSiffra_PlaceraSiffraTomBox()
         {
             //Setup 
             int rad = 2;
@@ -48,7 +48,7 @@ namespace Sudoku
             Assert.AreEqual(true, returvärde);
         }
         [TestMethod]
-        public void Placera_Siffra_Fylld_Box()
+        public void PlaceraSiffra_PlaceraSiffraIFylldBox()
         {
             //Setup 
             int rad = 2;
@@ -66,7 +66,7 @@ namespace Sudoku
         }
 
         [TestMethod]
-        public void Kontroll_Siffra_Placeras_Rätt()
+        public void PlaceraSiffra_KontrollSiffraPlacerasRätt()
         {
             //Setup 
             int rad = 2;
@@ -94,7 +94,7 @@ namespace Sudoku
             Assert.AreEqual(true, korrekt);
         }
         [TestMethod]
-        public void Kontroll_TabortKandidater_I_Ruta_Med_PlaceradSiffra()
+        public void PlaceraSiffra_KontrollTabortKandidaterIRutaMedPlaceradSiffra()
         {
             //Setup
             int rad = 2;
@@ -119,7 +119,7 @@ namespace Sudoku
             Assert.AreEqual(true, korrekt);
         }
         [TestMethod]
-        public void Kontroll_TabortKandidater_I_Rutor_Som_Påverkas_av_Placerad_Siffra()
+        public void PlaceraSiffra_KontrollTabortKandidaterIRutorSomPåverkasavPlaceradSiffra()
         {
             //Setup
             int rad = 3;
@@ -164,7 +164,7 @@ namespace Sudoku
             Assert.AreEqual(true, korrekt);
         }
         [TestMethod]
-        public void Kontroll_Av_Kandidater_I_Rutor_Som_Inte_Påverkas_Av_Placerad_Siffra()
+        public void PlaceraSiffra_KontrollAvKandidaterIRutorSomIntePåverkasAvPlaceradSiffra()
         {
             //Setup
             int rad = 3;
@@ -191,9 +191,39 @@ namespace Sudoku
             //Kontroll
             Assert.AreEqual(true, korrekt);
         }
-        
+        [TestMethod]
+        public void Start_MedKorrektSudoku()
+        {
+            //Setup
+            SudokuPussel pussel = SkapaEttKorrektSudoku();
+            bool resultat;
+
+            //Utför
+            resultat = pussel.Start();
+
+            //kontroll
+            Assert.AreEqual(true, resultat);
+
+        }
+
+        [TestMethod]
+        public void Start_MedFelaktigtSudoku()
+        {
+            //Setup
+            SudokuPussel pussel = SkapaEttFelaktigtSudoku();
+            bool resultat;
+
+            //Utför
+            resultat = pussel.Start();
+
+            //kontroll
+            Assert.AreEqual(false, resultat);
+        }
 
        
+
+
+
         #region Funktioner
         private SudokuPussel SkapaEttPusselOchPlaceraEnSiffra(int rad, int kolumn, int siffra)
         {
@@ -201,7 +231,75 @@ namespace Sudoku
             pussel.PlaceraSiffra(rad, kolumn, siffra);
             return pussel;
         }
-        
+        private SudokuPussel SkapaEttKorrektSudoku()
+        {
+            SudokuPussel sudoku = new SudokuPussel(new Storlek(3, 3));
+            List<SudokuSökResultat> iFylladrutor = new List<SudokuSökResultat>();
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 0, Kolumn = 4, Siffra = 8 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 1, Kolumn = 3, Siffra = 1 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 1, Kolumn = 8, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 2, Kolumn = 1, Siffra = 1 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 2, Kolumn = 8, Siffra = 3 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 3, Kolumn = 1, Siffra = 6 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 3, Kolumn = 3, Siffra = 2 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 0, Siffra = 3 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 2, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 4, Siffra = 5 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 7, Siffra = 6 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 8, Siffra = 7 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 5, Kolumn = 1, Siffra = 5 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 5, Kolumn = 6, Siffra = 2 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 5, Kolumn = 8, Siffra = 4 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 1, Siffra = 3 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 2, Siffra = 6 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 5, Siffra = 5 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 7, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 8, Siffra = 8 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 7, Kolumn = 1, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 7, Kolumn = 4, Siffra = 3 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 7, Kolumn = 8, Siffra = 5 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 8, Kolumn = 0, Siffra = 7 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 8, Kolumn = 4, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 8, Kolumn = 7, Siffra = 1 });
+            sudoku.PlaceraSiffra(iFylladrutor);
+            return sudoku;
+        }
+
+        private SudokuPussel SkapaEttFelaktigtSudoku()
+        {
+            SudokuPussel sudoku = new SudokuPussel(new Storlek(3, 3));
+            List<SudokuSökResultat> iFylladrutor = new List<SudokuSökResultat>();
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 0, Kolumn = 4, Siffra = 8 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 1, Kolumn = 3, Siffra = 1 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 1, Kolumn = 8, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 2, Kolumn = 1, Siffra = 1 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 2, Kolumn = 8, Siffra = 3 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 3, Kolumn = 1, Siffra = 6 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 3, Kolumn = 3, Siffra = 2 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 3, Kolumn = 5, Siffra = 2 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 0, Siffra = 3 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 2, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 4, Siffra = 5 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 7, Siffra = 6 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 4, Kolumn = 8, Siffra = 7 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 5, Kolumn = 1, Siffra = 5 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 5, Kolumn = 6, Siffra = 2 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 5, Kolumn = 8, Siffra = 4 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 1, Siffra = 3 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 2, Siffra = 6 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 5, Siffra = 5 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 7, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 6, Kolumn = 8, Siffra = 8 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 7, Kolumn = 1, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 7, Kolumn = 4, Siffra = 3 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 7, Kolumn = 8, Siffra = 5 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 8, Kolumn = 0, Siffra = 7 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 8, Kolumn = 4, Siffra = 9 });
+            iFylladrutor.Add(new SudokuSökResultat() { Rad = 8, Kolumn = 7, Siffra = 1 });
+            sudoku.PlaceraSiffra(iFylladrutor);
+            return sudoku;
+        }
+
         #endregion
     }
 
