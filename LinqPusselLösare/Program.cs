@@ -2,6 +2,7 @@
 using Sudoku;
 using Sudoku.Struct;
 using System.Collections.Generic;
+using Sudoku.Enum;
 
 
 namespace LinqPusselLösare
@@ -11,8 +12,10 @@ namespace LinqPusselLösare
         static void Main(string[] args)
         {
             SudokuPussel sudoku = new SudokuPussel(new Storlek(3, 3));
+            KorrektSudoku(sudoku);
             int val = 0;
             string felMeddelande = string.Empty;
+            string tipsMeddelande = string.Empty;
             do
             {
 
@@ -24,9 +27,19 @@ namespace LinqPusselLösare
                     Console.ForegroundColor = System.ConsoleColor.White;
                     felMeddelande = string.Empty;
                 }
+                if(tipsMeddelande != string.Empty)
+                {
+                    Console.ForegroundColor = System.ConsoleColor.Yellow;
+                    Console.WriteLine($"{tipsMeddelande}\n");
+                    Console.ForegroundColor = System.ConsoleColor.White;
+                    tipsMeddelande = string.Empty;
+                }
                 Console.WriteLine("1: Placera Siffra");
                 Console.WriteLine("2: Tabort Siffra");
-                Console.WriteLine("3: Börja Lös Puzzel");
+                if (sudoku.PusselStatus == Status.Inmatning)
+                    Console.WriteLine("3: Börja Lös Puzzel");
+                else
+                    Console.WriteLine("3: Tips");
                 Console.WriteLine("4: Avsluta\n");
                 Console.Write("Vad vill du göra ? ");
                 try
@@ -41,9 +54,14 @@ namespace LinqPusselLösare
                             TabortSiffra(sudoku);
                             break;
                         case 3:
-                            if(!sudoku.Start())
+                            if(sudoku.PusselStatus==Status.Inmatning)
                             {
-                                felMeddelande = "Det finns ingen lösning på puzzlet kontrollera att alla ledtrådar är korrekt placerade";
+                                if(!sudoku.Start())
+                                    felMeddelande = "Det finns ingen lösning på puzzlet kontrollera att alla ledtrådar är korrekt placerade";
+                            }
+                            else
+                            {
+                                tipsMeddelande = sudoku.TipsNivå3;
                             }
                             break;
                     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sudoku.Struct;
+using Sudoku.Enum;
 
 namespace Sudoku
 {
@@ -20,6 +21,114 @@ namespace Sudoku
                 return (from k in AllaKandidater where k.Möjlig == true select k).ToList();
             }
         }
+        public Status PusselStatus { get; private set; }
+        public string TipsNivå1
+        {
+            get
+            {
+                string tipsMeddelande = string.Empty;
+                if(LösningFinns && !KorrektIFyllt())
+                {
+                    tipsMeddelande = "Det finns rutor som är felaktigt ifyllda";
+                }
+                if (tipsMeddelande == string.Empty)
+                {
+                    SudokuSökResultat resultat = Tips();
+                    switch (resultat.Teknik)
+                    {
+                        case SudokuTekniker.SingelIRad:
+                            tipsMeddelande = "SingelIRad tekniken kan användas för att lösa en eller flera rutor";
+                            break;
+                        case SudokuTekniker.SingelIKolumn:
+                            tipsMeddelande = "SingelIKolumn tekniken kan användas för att lösa en eller flera rutor";
+                            break;
+                        case SudokuTekniker.SingelIBox:
+                            tipsMeddelande = "SingelIBox tekniken kan användas för att lösa en eller flera rutor";
+                            break;
+                        case SudokuTekniker.SingelKandidater:
+                            tipsMeddelande = "SingelKandidat tekniken kan användas för att lösa en eller flera rutor";
+                            break;
+                        default:
+                            tipsMeddelande = "Inga tips hittades";
+                            break;
+                    }
+                }
+                return tipsMeddelande;
+            }
+        }
+        public string TipsNivå2
+        {
+            get
+            {
+                string tipsMeddelande = string.Empty;
+                if(LösningFinns && !KorrektIFyllt())
+                {
+                    tipsMeddelande = "Det finns rutor som är felaktigt ifyllda";
+                }
+                if(tipsMeddelande == string.Empty)
+                {
+                    SudokuSökResultat resultat = Tips();
+                    switch(resultat.Teknik)
+                    {
+                        case SudokuTekniker.SingelIRad:
+                            tipsMeddelande = $"SingelIRad tekniken kan användas för att lösa en eller flera rutor i rad {resultat.Rad}";
+                            break;
+                        case SudokuTekniker.SingelIKolumn:
+                            tipsMeddelande = $"SingelIkolumn tekniken kan användas för att lösa en eller flera rutor i kolumn {resultat.Kolumn}";
+                            break;
+                        case SudokuTekniker.SingelIBox:
+                            tipsMeddelande = $"SingelIBox tekniken kan användas för att lösa en eller flera rutor i box {BeräknaBox(resultat.Rad,resultat.Kolumn)}";
+                            break;
+                        case SudokuTekniker.SingelKandidater:
+                            tipsMeddelande = $"Rutan i rad {resultat.Rad} och kolumn {resultat.Kolumn} kan lösas med SingelKandidat tekniken";
+                            break;
+                        default:
+                            tipsMeddelande = "Inga tips hittades";
+                            break;
+                    }
+                }
+                return tipsMeddelande;
+            }
+        }
+        public string TipsNivå3
+        {
+            get
+            {
+                string tipsMeddelande = string.Empty;
+                if (LösningFinns && !KorrektIFyllt())
+                {
+                    tipsMeddelande = "Det finns rutor som är felaktigt ifyllda";
+                }
+                if(tipsMeddelande == string.Empty)
+                {
+                    SudokuSökResultat resulat = Tips();
+                    switch(resulat.Teknik)
+                    {
+                        case SudokuTekniker.SingelIRad:
+
+                            tipsMeddelande = $"SingelIRad tekniken kan användas för att placera siffran {resulat.Siffra} i rad {resulat.Rad}" +
+                                $" och kolumn {resulat.Kolumn}";
+                            break;
+                        case SudokuTekniker.SingelIKolumn:
+                            tipsMeddelande = $"SingelIKolumn tekniken kan användas för att placera siffran {resulat.Siffra} i rad {resulat.Rad}" +
+                                $" och kolumn {resulat.Kolumn}";
+                            break;
+                        case SudokuTekniker.SingelIBox:
+                            tipsMeddelande = $"SingelIBox tekniken kan användas för att placera siffran {resulat.Siffra} i rad {resulat.Rad}" +
+                                $" och kolumn {resulat.Kolumn}";
+                            break;
+                        case SudokuTekniker.SingelKandidater:
+                            tipsMeddelande = $"Siffran {resulat.Siffra} är den enda möjliga kandidaten i rad {resulat.Rad} och kolumn {resulat.Kolumn}";
+                            break;
+                        default:
+                            tipsMeddelande = "Inga tips hittades";
+                            break;
+
+                    }
+                }
+                return tipsMeddelande;
+            }
+        }
         private List<Func<SudokuPussel, List<SudokuSökResultat>, bool>> allaTekniker = new List<Func<SudokuPussel, List<SudokuSökResultat>, bool>>();
         private SudokuRuta[] lösning;
         #endregion
@@ -33,6 +142,7 @@ namespace Sudoku
             SpelPlan = new List<SudokuRuta>();
             AllaKandidater = new List<Kandidat>();
             lösning = new SudokuRuta[(int)Math.Pow(storlek, 2)];
+            PusselStatus = Status.Inmatning;
             for (int rad = 0; rad < PusselStorlek.AntalRutorIHöjd; rad++)
             {
                 for (int kolumn = 0; kolumn < PusselStorlek.AntalrutorIBredd; kolumn++)
@@ -66,8 +176,9 @@ namespace Sudoku
             LösningFinns = FinnsDetEnLösning();
             if (LösningFinns)
             {
-                SpelPlan.CopyTo(lösning);
+                SparaLösningen();
                 TabortEjGivnaSiffror();
+                PusselStatus = Status.Pågår;
             }
             else
             {
@@ -80,6 +191,8 @@ namespace Sudoku
             RäknaOmKandidater();
             return LösningFinns;
         }
+
+       
 
         private void TabortEjGivnaSiffror()
         {
@@ -119,7 +232,7 @@ namespace Sudoku
             SudokuRuta ruta = (from s in SpelPlan
                                where s.Rad == rad && s.Kolumn == kolumn
                                select s).First();
-            if (ruta.Siffra != 0)
+            if (ruta.Siffra != 0 && !ruta.StartSiffra)
             {
                 ruta.Siffra = 0;
                 this.RäknaOmKandidater();
@@ -191,6 +304,55 @@ namespace Sudoku
 
         #endregion
         #region Privata
+        private List<SudokuRuta> HittaFelaktikaRutor()
+        {
+            List<SudokuRuta> felaaktigaRutor = new List<SudokuRuta>();
+            var sudokuRutor = from sudokuRuta in SpelPlan
+                        where sudokuRuta.Siffra != 0 && !sudokuRuta.StartSiffra
+                        select sudokuRuta;
+            foreach(SudokuRuta ruta in sudokuRutor)
+            {
+                if(ruta.Siffra != lösning[ruta.Id].Siffra)
+                {
+                    felaaktigaRutor.Add(ruta);
+                }
+            }
+            return felaaktigaRutor;
+        }
+        private void SparaLösningen()
+        {
+            int storlek = PusselStorlek.AntalrutorIBredd * PusselStorlek.AntalRutorIHöjd;
+            foreach (SudokuRuta ruta in SpelPlan)
+            {
+                lösning[ruta.Id] = new SudokuRuta(ruta.Id, ruta.Siffra);
+            }
+        }
+        private bool KorrektIFyllt()
+        {
+            bool korrekt = true;
+            var sudokurutor = from sudokuruta in SpelPlan
+                              where sudokuruta.Siffra != 0 && !sudokuruta.StartSiffra
+                              select sudokuruta;
+            foreach(SudokuRuta ruta in sudokurutor)
+            {
+                if(ruta.Siffra != lösning[ruta.Id].Siffra)
+                {
+                    korrekt = false;
+                    break;
+                }
+            }
+            return korrekt;
+        }
+        private SudokuSökResultat Tips()
+        {
+            List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();
+            foreach (Func<SudokuPussel, List<SudokuSökResultat>, bool> teknik in allaTekniker)
+            {
+                if (teknik(this, resultat))
+                    break;
+            }
+            return resultat.FirstOrDefault();
+        }
         private bool FinnsDetEnLösning()
         {
             List<SudokuSökResultat> resultat = new List<SudokuSökResultat>();

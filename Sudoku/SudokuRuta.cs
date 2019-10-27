@@ -49,6 +49,16 @@ namespace Sudoku
             Siffra = 0;
             StartSiffra = false;
         }
+        public SudokuRuta(int id,int siffra)
+        {
+            Id = id;
+            Rad = -1;
+            Kolumn = -1;
+            Box = -1;
+            StartSiffra = false;
+            maxVärde = Int32.MaxValue;
+            Siffra = siffra;
+        }
         #endregion
     }
 }

@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enum\Status.cs" />
     <Compile Include="Enum\SudokuTekniker.cs" />
     <Compile Include="Kandidat.cs" />
     <Compile Include="Struct\Storlek.cs" />
