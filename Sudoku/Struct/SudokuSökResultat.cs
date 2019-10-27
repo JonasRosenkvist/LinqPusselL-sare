@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Sudoku.Enum;
 
 namespace Sudoku.Struct
 {
@@ -11,5 +7,6 @@ namespace Sudoku.Struct
         public int Rad { get; set; }
         public int Kolumn { get; set; }
         public int Siffra { get; set; }
+        public SudokuTekniker Teknik { get; set; }
     }
 }

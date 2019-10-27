@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Sudoku.Struct;
-using System.Text;
-using System.Threading.Tasks;
+using Sudoku.Enum;
 
 namespace Sudoku
 {
@@ -28,7 +27,7 @@ namespace Sudoku
             {
                 foreach (var info in ruta)
                 {
-                    resultat.Add(new SudokuSökResultat { Rad = info.Rad, Kolumn = info.Kolumn, Siffra = ruta.Key.Siffra });
+                    resultat.Add(new SudokuSökResultat { Rad = info.Rad, Kolumn = info.Kolumn, Siffra = ruta.Key.Siffra, Teknik = SudokuTekniker.SingelIRad });
                 }
             }
             return sudokurutor.Count() > 0;
@@ -54,7 +53,7 @@ namespace Sudoku
             {
                 foreach (var info in ruta)
                 {
-                    resultat.Add(new SudokuSökResultat { Rad = info.Rad, Kolumn = info.Kolumn, Siffra = ruta.Key.Siffra });
+                    resultat.Add(new SudokuSökResultat { Rad = info.Rad, Kolumn = info.Kolumn, Siffra = ruta.Key.Siffra, Teknik = SudokuTekniker.SingelIKolumn });
                 }
             }
             return sudokurutor.Count() > 0;
@@ -75,7 +74,7 @@ namespace Sudoku
             {
                 foreach (var info in ruta)
                 {
-                    resultat.Add(new SudokuSökResultat { Rad = info.Rad, Kolumn = info.Kolumn, Siffra = ruta.Key.Siffra });
+                    resultat.Add(new SudokuSökResultat { Rad = info.Rad, Kolumn = info.Kolumn, Siffra = ruta.Key.Siffra,Teknik=SudokuTekniker.SingelIBox });
                 }
             }
             return sudokurutor.Count() > 0;
@@ -96,7 +95,7 @@ namespace Sudoku
             {
                 foreach (var info in ruta)
                 {
-                    resultat.Add(new SudokuSökResultat { Rad = ruta.Key.Rad, Kolumn = ruta.Key.Kolumn, Siffra = info.Siffra});
+                    resultat.Add(new SudokuSökResultat { Rad = ruta.Key.Rad, Kolumn = ruta.Key.Kolumn, Siffra = info.Siffra,Teknik= SudokuTekniker.SingelKandidater });
                 }
             }
             return sudokurutor.Count() > 0;
