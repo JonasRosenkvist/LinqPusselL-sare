@@ -218,9 +218,9 @@ namespace Sudoku
             }
             else
             {
-                return korrektPuzzel = false;
+                korrektPuzzel = false;
             }
-            return true;
+            return korrektPuzzel;
         }
 
         private bool DubbletterIBox()
