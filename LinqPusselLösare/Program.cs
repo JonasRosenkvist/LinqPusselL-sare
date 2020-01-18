@@ -20,14 +20,14 @@ namespace LinqPusselLösare
             {
 
                 Console.WriteLine(sudoku + "\n");
-                if(felMeddelande != string.Empty)
+                if (felMeddelande != string.Empty)
                 {
                     Console.ForegroundColor = System.ConsoleColor.Red;
                     Console.WriteLine($"{felMeddelande}\n");
                     Console.ForegroundColor = System.ConsoleColor.White;
                     felMeddelande = string.Empty;
                 }
-                if(tipsMeddelande != string.Empty)
+                if (tipsMeddelande != string.Empty)
                 {
                     Console.ForegroundColor = System.ConsoleColor.Yellow;
                     Console.WriteLine($"{tipsMeddelande}\n");
@@ -36,10 +36,22 @@ namespace LinqPusselLösare
                 }
                 Console.WriteLine("1: Placera Siffra");
                 Console.WriteLine("2: Tabort Siffra");
-                if (sudoku.PusselStatus == Status.Inmatning)
-                    Console.WriteLine("3: Börja Lös Puzzel");
-                else
-                    Console.WriteLine("3: Tips");
+                switch (sudoku.PusselStatus)
+                {
+                    case Status.Inmatning:
+                        if (sudoku.PusselStatus == Status.Inmatning)
+                            Console.WriteLine("3: Börja Lös Puzzel");
+                        break;
+                    case Status.Pågår:
+                        Console.WriteLine("3: Tips");
+                        break;
+                    case Status.Löst:
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine("3: Tips");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                }
+                
                 Console.WriteLine("4: Avsluta\n");
                 Console.Write("Vad vill du göra ? ");
                 try
@@ -54,14 +66,14 @@ namespace LinqPusselLösare
                             TabortSiffra(sudoku);
                             break;
                         case 3:
-                            if(sudoku.PusselStatus==Status.Inmatning)
+                            if (sudoku.PusselStatus == Status.Inmatning)
                             {
-                                if(!sudoku.Start())
+                                if (!sudoku.Start())
                                     felMeddelande = "Det finns ingen lösning på puzzlet kontrollera att alla ledtrådar är korrekt placerade";
                             }
-                            else
+                            else if(sudoku.PusselStatus == Status.Pågår)
                             {
-                                tipsMeddelande = sudoku.TipsNivå3;
+                                tipsMeddelande = Tips(sudoku);
                             }
                             break;
                     }
@@ -84,6 +96,45 @@ namespace LinqPusselLösare
             }
             while (val != 4);
         }
+
+        private static string Tips(SudokuPussel sudoku)
+        {
+            string tipsMeddelande = string.Empty;
+            int val;
+            Console.WriteLine("\n1:Teknik");
+            Console.WriteLine("2:Teknik och rad/kolumn/box");
+            Console.WriteLine("3:Lös ett steg");
+            Console.Write("\nVälj hur mycket hjälp du vill ha: ");
+            do
+            {
+                try
+                {
+                    val = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (FormatException ex)
+                {
+                    val = -1;
+                }
+                switch (val)
+                {
+                    case 1:
+                        tipsMeddelande = sudoku.TipsNivå1;
+                        break;
+                    case 2:
+                        tipsMeddelande = sudoku.TipsNivå2;
+                        break;
+                    case 3:
+                        tipsMeddelande = sudoku.TipsNivå3;
+                        break;
+                    default:
+                        Console.Write("\rVälj hur mycket hjälp du vill ha: ");
+                        break;
+                }
+            }
+            while (val < 1 || val > 3);
+            return tipsMeddelande;
+        }
+
         static void PlaceraSiffra(SudokuPussel sudoku)
         {
             int siffra, rad, kolumn;

@@ -276,9 +276,9 @@ namespace Sudoku
                             output += "| ";
                             foreach (Kandidat kand in kandidater)
                             {
-                                //if (kand.Möjlig)
-                                //output += $"{kand.Siffra}";
-                                //else
+                                if (kand.Möjlig)
+                                    output += $"{kand.Siffra}";
+                                else
                                 output += " ";
                             }
                             output += " ";
